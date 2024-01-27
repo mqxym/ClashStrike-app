@@ -1,0 +1,17 @@
+<div class="flex flex-col items-center p-4">
+    <form [formGroup]="countdownForm" (ngSubmit)="onSubmit()" class="mb-4">
+      <div class="flex space-x-2 mb-2">
+        <input type="number" formControlName="days" placeholder="Days" class="border p-2 rounded">
+        <input type="number" formControlName="hours" placeholder="Hours" class="border p-2 rounded">
+        <input type="number" formControlName="minutes" placeholder="Minutes" class="border p-2 rounded">
+      </div>
+      <button type="submit" [disabled]="!countdownForm.valid" class="bg-blue-500 text-white p-2 rounded">Start Countdown</button>
+    </form>
+  
+    <div class="space-y-2">
+      <div *ngFor="let countdown of countdowns" class="p-2 border rounded">
+        <p>Countdown: {{countdown.timeLeft}}</p>
+      </div>
+    </div>
+  </div>
+  

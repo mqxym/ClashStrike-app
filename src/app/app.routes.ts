@@ -1,3 +1,6 @@
-import { Routes } from '@angular/router';
+import { Route } from '@angular/router';
+import { TimerComponent } from './timer/timer.component';
 
-export const routes: Routes = [];
+export const routes: Route[] = [
+  { path: 'timer', component: TimerComponent}
+];
