@@ -19,8 +19,8 @@ export class TimerComponent implements OnInit, OnDestroy {
   constructor(private formBuilder: FormBuilder) {
     // Initialize the form with validators
     this.countdownForm = this.formBuilder.group({
-      days: ['', [Validators.required, Validators.min(0)]],
-      hours: ['', [Validators.required, Validators.min(0), Validators.max(23)]],
+      days: ['', [Validators.min(0)]],
+      hours: ['', [Validators.min(0), Validators.max(23)]],
       minutes: ['', [Validators.required, Validators.min(0), Validators.max(59)]]
     });
      
@@ -31,10 +31,6 @@ export class TimerComponent implements OnInit, OnDestroy {
    this.timerSubscription = interval(1000).subscribe(() => {
     this.countdowns.forEach(countdown => {
       countdown.timeLeft = this.calculateTimeLeft(countdown.targetDate);
-      if (countdown.timeLeft === 'Time is up!') {
-        // Optional: Remove countdown when time is up
-        this.countdowns = this.countdowns.filter(c => c.timeLeft !== 'Time is up!');
-      }
     });
   });
   }
