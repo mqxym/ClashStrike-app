@@ -1,7 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { interval, Subscription, EMPTY } from 'rxjs';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import { interval, Subscription } from 'rxjs';
+import { atLeastOneValidator } from '../shared/validators';
 
 @Component({
   selector: 'app-countdown',
@@ -10,6 +11,7 @@ import { interval, Subscription, EMPTY } from 'rxjs';
   standalone: true,
   imports: [ReactiveFormsModule, CommonModule]
 })
+
 export class TimerComponent implements OnDestroy {
   countdownForm: FormGroup;
   countdowns: Array<{ targetDate: Date, timeLeft: string }> = [];
@@ -21,13 +23,14 @@ export class TimerComponent implements OnDestroy {
     this.countdownForm = this.formBuilder.group({
       days: ['', [Validators.min(0)]],
       hours: ['', [Validators.min(0), Validators.max(23)]],
-      minutes: ['', [Validators.required, Validators.min(0), Validators.max(59)]]
-    });
+      minutes: ['', [Validators.min(0), Validators.max(59)]]
+    }, { validators: atLeastOneValidator });
      
   }
 
   onSubmit(): void {
     let { days, hours, minutes } = this.countdownForm.value;
+    minutes = minutes || 0; // If minutes is not set, set it to 0
     days = days || 0; // If days is not set, set it to 0
     hours = hours || 0; // If hours is not set, set it to 0
     const targetDate = new Date();

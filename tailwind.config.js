@@ -1,6 +1,8 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: [],
+  content: [
+    "./src/**/*.html",
+  ],
   theme: {
     extend: {},
   },
@@ -11,6 +13,5 @@ module.exports = {
       cursor: ['disabled'],
     }
   },
-  purge: ['./src/**/*.{html,ts}'],
 }
 
