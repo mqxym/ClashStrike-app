@@ -14,31 +14,37 @@ import { atLeastOneValidator } from '../shared/validators';
 
 export class TimerComponent implements OnDestroy {
   countdownForm: FormGroup;
-  countdowns: Array<{ targetDate: Date, timeLeft: string }> = [];
+  countdowns: Array<{ group: string, targetDate: Date, timeLeft: string }> = [];
+  timerGroups: string[] = [];
   private timerSubscription!: Subscription;
 
 
   constructor(private formBuilder: FormBuilder) {
     // Initialize the form with validators
     this.countdownForm = this.formBuilder.group({
+      groupName: [''],
+      selectedGroup: [''],
       days: ['', [Validators.min(0)]],
       hours: ['', [Validators.min(0), Validators.max(23)]],
       minutes: ['', [Validators.min(0), Validators.max(59)]]
     }, { validators: atLeastOneValidator });
-     
   }
 
   onSubmit(): void {
-    let { days, hours, minutes } = this.countdownForm.value;
-    minutes = minutes || 0; // If minutes is not set, set it to 0
-    days = days || 0; // If days is not set, set it to 0
-    hours = hours || 0; // If hours is not set, set it to 0
+    let { groupName, selectedGroup, days, hours, minutes } = this.countdownForm.value;
+    if (groupName && !this.timerGroups.includes(groupName)) {
+      this.timerGroups.push(groupName);
+    }
+    const group = selectedGroup || groupName || 'Default';
+    minutes = minutes || 0;
+    days = days || 0;
+    hours = hours || 0;
     const targetDate = new Date();
     targetDate.setDate(targetDate.getDate() + parseInt(days, 10));
     targetDate.setHours(targetDate.getHours() + parseInt(hours, 10));
     targetDate.setMinutes(targetDate.getMinutes() + parseInt(minutes, 10));
 
-    this.countdowns.push({ targetDate, timeLeft: this.calculateTimeLeft(targetDate) });
+    this.countdowns.push({ group, targetDate, timeLeft: this.calculateTimeLeft(targetDate) });
 
     if (!this.timerSubscription || this.timerSubscription.closed) {
       this.timerSubscription = interval(1000).subscribe(() => {
