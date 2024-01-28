@@ -10,7 +10,7 @@ import { interval, Subscription, EMPTY } from 'rxjs';
   standalone: true,
   imports: [ReactiveFormsModule, CommonModule]
 })
-export class TimerComponent implements OnInit, OnDestroy {
+export class TimerComponent implements OnDestroy {
   countdownForm: FormGroup;
   countdowns: Array<{ targetDate: Date, timeLeft: string }> = [];
   private timerSubscription!: Subscription;
@@ -26,13 +26,26 @@ export class TimerComponent implements OnInit, OnDestroy {
      
   }
 
-  ngOnInit(): void {
-   // Set up a timer to update the countdowns every second
-   this.timerSubscription = interval(1000).subscribe(() => {
-    this.countdowns.forEach(countdown => {
-      countdown.timeLeft = this.calculateTimeLeft(countdown.targetDate);
-    });
-  });
+  onSubmit(): void {
+    let { days, hours, minutes } = this.countdownForm.value;
+    days = days || 0; // If days is not set, set it to 0
+    hours = hours || 0; // If hours is not set, set it to 0
+    const targetDate = new Date();
+    targetDate.setDate(targetDate.getDate() + parseInt(days, 10));
+    targetDate.setHours(targetDate.getHours() + parseInt(hours, 10));
+    targetDate.setMinutes(targetDate.getMinutes() + parseInt(minutes, 10));
+
+    this.countdowns.push({ targetDate, timeLeft: this.calculateTimeLeft(targetDate) });
+
+    // Set up a timer to update the countdowns every second
+    // Only subscribe when the submit button is pressed
+    if (!this.timerSubscription || this.timerSubscription.closed) {
+      this.timerSubscription = interval(1000).subscribe(() => {
+        this.countdowns.forEach(countdown => {
+          countdown.timeLeft = this.calculateTimeLeft(countdown.targetDate);
+        });
+      });
+    }
   }
 
   ngOnDestroy(): void {
@@ -40,16 +53,6 @@ export class TimerComponent implements OnInit, OnDestroy {
     if (this.timerSubscription) {
       this.timerSubscription.unsubscribe();
     }
-  }
-
-  onSubmit(): void {
-    const { days, hours, minutes } = this.countdownForm.value;
-    const targetDate = new Date();
-    targetDate.setDate(targetDate.getDate() + parseInt(days, 10));
-    targetDate.setHours(targetDate.getHours() + parseInt(hours, 10));
-    targetDate.setMinutes(targetDate.getMinutes() + parseInt(minutes, 10));
-
-    this.countdowns.push({ targetDate, timeLeft: this.calculateTimeLeft(targetDate) });
   }
 
   private calculateTimeLeft(targetDate: Date): string {
