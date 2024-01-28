@@ -37,8 +37,6 @@ export class TimerComponent implements OnDestroy {
 
     this.countdowns.push({ targetDate, timeLeft: this.calculateTimeLeft(targetDate) });
 
-    // Set up a timer to update the countdowns every second
-    // Only subscribe when the submit button is pressed
     if (!this.timerSubscription || this.timerSubscription.closed) {
       this.timerSubscription = interval(1000).subscribe(() => {
         this.countdowns.forEach(countdown => {

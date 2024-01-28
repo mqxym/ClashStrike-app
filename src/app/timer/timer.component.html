@@ -5,7 +5,11 @@
         <input type="number" formControlName="hours" placeholder="Hours" class="border p-2 rounded">
         <input type="number" formControlName="minutes" placeholder="Minutes" class="border p-2 rounded">
       </div>
-      <button type="submit" [disabled]="!countdownForm.valid" class="bg-blue-500 text-white p-2 rounded">Start Countdown</button>
+      <button type="submit" 
+        [disabled]="!countdownForm.valid" 
+        [class.opacity-50]="!countdownForm.valid" 
+        [class.cursor-not-allowed]="!countdownForm.valid" 
+        class="bg-blue-500 text-white p-2 rounded">Start Countdown</button>
     </form>
   
     <div class="space-y-2">

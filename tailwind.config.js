@@ -5,6 +5,12 @@ module.exports = {
     extend: {},
   },
   plugins: [],
+  variants: {
+    extend: {
+      opacity: ['disabled'],
+      cursor: ['disabled'],
+    }
+  },
   purge: ['./src/**/*.{html,ts}'],
 }
 
