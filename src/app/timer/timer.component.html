@@ -1,19 +1,33 @@
 <div class="flex flex-col items-center p-4">
   <form [formGroup]="countdownForm" (ngSubmit)="onSubmit()" class="mb-4">
-    <div class="flex space-x-2 mb-2">
-      <input type="text" formControlName="groupName" placeholder="Group Name" class="border p-2 rounded">
-      <select formControlName="selectedGroup" class="border p-2 rounded">
-        <option *ngFor="let group of timerGroups" [value]="group">{{group}}</option>
-      </select>
-      <input type="number" formControlName="days" placeholder="Days" class="border p-2 rounded">
-      <input type="number" formControlName="hours" placeholder="Hours" class="border p-2 rounded">
-      <input type="number" formControlName="minutes" placeholder="Minutes" class="border p-2 rounded">
+    <div class="flex flex-col lg:flex-row space-y-2 lg:space-y-0 lg:space-x-2 mb-2">
+      <div class="flex flex-col space-y-1">
+        <input type="text" formControlName="groupName" placeholder="Group Name" class="border p-2 rounded h-10">
+        <span class="text-xs text-gray-500">Group Name</span>
+      </div>
+      <div class="flex flex-col space-y-1">
+        <select formControlName="selectedGroup" class="border p-2 rounded h-10">
+          <option *ngFor="let group of timerGroups" [value]="group">{{group}}</option>
+        </select>
+      </div>
+      <div class="flex flex-col space-y-1">
+        <input type="number" formControlName="days" placeholder="Days" class="border p-2 rounded h-10">
+        <span class="text-xs text-gray-500">Days</span>
+      </div>
+      <div class="flex flex-col space-y-1">
+        <input type="number" formControlName="hours" placeholder="Hours" class="border p-2 rounded h-10">
+        <span class="text-xs text-gray-500">Hours</span>
+      </div>
+      <div class="flex flex-col space-y-1">
+        <input type="number" formControlName="minutes" placeholder="Minutes" class="border p-2 rounded h-10">
+        <span class="text-xs text-gray-500">Minutes</span>
+      </div>
     </div>
     <button type="submit"
       [disabled]="!countdownForm.valid"
       [class.opacity-50]="!countdownForm.valid"
       [class.cursor-not-allowed]="!countdownForm.valid"
-      class="bg-blue-500 text-white p-2 rounded">Start Countdown</button>
+      class="bg-fuchsia-600 text-white p-2 rounded h-10">Start Countdown</button>
   </form>
   <div class="space-y-2">
     <div *ngFor="let countdown of countdowns" class="p-2 border rounded">
