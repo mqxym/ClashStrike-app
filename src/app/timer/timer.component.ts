@@ -4,18 +4,25 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular
 import { Meta, Title } from '@angular/platform-browser';
 import { interval, Subscription } from 'rxjs';
 import { atLeastOneValidator } from '../shared/validators';
+import { trigger, state, style, animate, transition  } from '@angular/animations';
 
 @Component({
   selector: 'app-countdown',
   templateUrl: './timer.component.html',
   styleUrls: ['./timer.component.css'],
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule]
+  imports: [ReactiveFormsModule, CommonModule],
+  animations: [
+    trigger('fade', [
+      transition(':leave', [animate(500, style({ opacity: 0 }))])
+    ])
+  ]
 })
 
 export class TimerComponent implements OnInit, OnDestroy {
   groupForm: FormGroup;
   timerForm: FormGroup;
+  public showElement: boolean = false;
   countdowns: Array<{ group: string, targetDate: Date, timeLeft: string }> = [];
   timerGroups: string[] = [];
   private timerSubscription!: Subscription;
@@ -42,11 +49,18 @@ export class TimerComponent implements OnInit, OnDestroy {
       {name: 'keywords', content: 'Clash of Clans, ClashMultiTimer, Game, Tool, Upgrades'},
     ]);
   }
+
   onSubmitGroup(): void {
     let { groupName } = this.groupForm.value;
+    
     if (groupName && !this.timerGroups.includes(groupName)) {
+      this.showElement = true;
       this.timerGroups.push(groupName);
+      setTimeout(() => {
+        this.showElement = false;
+      }, 2000);
     }
+    
   }
 
   onSubmitTimer(): void {
