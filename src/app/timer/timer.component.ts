@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import { Meta, Title } from '@angular/platform-browser';
 import { interval, Subscription } from 'rxjs';
 import { atLeastOneValidator } from '../shared/validators';
 
@@ -12,14 +13,14 @@ import { atLeastOneValidator } from '../shared/validators';
   imports: [ReactiveFormsModule, CommonModule]
 })
 
-export class TimerComponent implements OnDestroy {
+export class TimerComponent implements OnInit, OnDestroy {
   countdownForm: FormGroup;
   countdowns: Array<{ group: string, targetDate: Date, timeLeft: string }> = [];
   timerGroups: string[] = [];
   private timerSubscription!: Subscription;
 
 
-  constructor(private formBuilder: FormBuilder) {
+  constructor(private formBuilder: FormBuilder, private metaTagService: Meta, private titleService: Title) {
     // Initialize the form with validators
     this.countdownForm = this.formBuilder.group({
       groupName: [''],
@@ -28,6 +29,15 @@ export class TimerComponent implements OnDestroy {
       hours: ['', [Validators.min(0), Validators.max(23)]],
       minutes: ['', [Validators.min(0), Validators.max(59)]]
     }, { validators: atLeastOneValidator });
+  }
+
+  ngOnInit() {
+    this.titleService.setTitle('Upgrade Helper - ClashMultiTimer');
+
+    this.metaTagService.addTags([
+      {name: 'description', content: 'ClashMultiTimer is a tool for Clash of Clans to help them organizing their upgrades.'},
+      {name: 'keywords', content: 'Clash of Clans, ClashMultiTimer, Game, Tool, Upgrades'},
+    ]);
   }
 
   onSubmit(): void {

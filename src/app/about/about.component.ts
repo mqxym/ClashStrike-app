@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Meta } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-about',
@@ -7,6 +8,14 @@ import { Component } from '@angular/core';
   templateUrl: './about.component.html',
   styleUrl: './about.component.css'
 })
-export class AboutComponent {
+export class AboutComponent implements OnInit {
+
+  constructor(private metaTagService: Meta) { }
+
+  ngOnInit() {
+    this.metaTagService.addTags([
+      {name: 'description', content: 'This is the about page for ClashMultiTimer'},
+    ]);
+  }
 
 }
