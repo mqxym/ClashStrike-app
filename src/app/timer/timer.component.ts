@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular
 import { Meta, Title } from '@angular/platform-browser';
 import { interval, Subscription } from 'rxjs';
 import { atLeastOneValidator } from '../shared/validators';
-import { trigger, state, style, animate, transition  } from '@angular/animations';
+import { trigger, style, animate, transition  } from '@angular/animations';
 
 @Component({
   selector: 'app-countdown',
@@ -22,7 +22,9 @@ import { trigger, state, style, animate, transition  } from '@angular/animations
 export class TimerComponent implements OnInit, OnDestroy {
   groupForm: FormGroup;
   timerForm: FormGroup;
-  public showElement: boolean = false;
+  
+  public showAccountCreated: boolean = false;
+  public showAccountDeleted: boolean = false;
   countdowns: Array<{ group: string, targetDate: Date, timeLeft: string }> = [];
   timerGroups: string[] = [];
   private timerSubscription!: Subscription;
@@ -54,10 +56,10 @@ export class TimerComponent implements OnInit, OnDestroy {
     let { groupName } = this.groupForm.value;
     
     if (groupName && !this.timerGroups.includes(groupName)) {
-      this.showElement = true;
+      this.showAccountCreated = true;
       this.timerGroups.push(groupName);
       setTimeout(() => {
-        this.showElement = false;
+        this.showAccountCreated = false;
       }, 2000);
     }
     
@@ -83,6 +85,26 @@ export class TimerComponent implements OnInit, OnDestroy {
         });
       });
     }
+  }
+
+  confirmDelete(group: string): void {
+    const confirmation = window.confirm('Are you sure you want to delete this group?');
+    if (confirmation) {
+      this.showAccountDeleted = true;
+      this.deleteGroup(group);
+      setTimeout(() => { 
+        this.showAccountDeleted = false;
+      } , 2000);
+    }
+  }
+
+  deleteGroup(group: string): void {
+    const index = this.timerGroups.indexOf(group);
+    if (index > -1) {
+      this.timerGroups.splice(index, 1);
+    }
+
+    this.countdowns = this.countdowns.filter(countdown => countdown.group !== group);
   }
 
   ngOnDestroy(): void {
