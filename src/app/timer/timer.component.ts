@@ -14,17 +14,20 @@ import { atLeastOneValidator } from '../shared/validators';
 })
 
 export class TimerComponent implements OnInit, OnDestroy {
-  countdownForm: FormGroup;
+  groupForm: FormGroup;
+  timerForm: FormGroup;
   countdowns: Array<{ group: string, targetDate: Date, timeLeft: string }> = [];
   timerGroups: string[] = [];
   private timerSubscription!: Subscription;
 
 
   constructor(private formBuilder: FormBuilder, private metaTagService: Meta, private titleService: Title) {
-    // Initialize the form with validators
-    this.countdownForm = this.formBuilder.group({
-      groupName: [''],
-      selectedGroup: [''],
+    this.groupForm = this.formBuilder.group({
+      groupName: ['', Validators.required]
+    });
+
+    this.timerForm  = this.formBuilder.group({
+      selectedGroup: ['', Validators.required],
       days: ['', [Validators.min(0)]],
       hours: ['', [Validators.min(0), Validators.max(23)]],
       minutes: ['', [Validators.min(0), Validators.max(59)]]
@@ -39,13 +42,16 @@ export class TimerComponent implements OnInit, OnDestroy {
       {name: 'keywords', content: 'Clash of Clans, ClashMultiTimer, Game, Tool, Upgrades'},
     ]);
   }
-
-  onSubmit(): void {
-    let { groupName, selectedGroup, days, hours, minutes } = this.countdownForm.value;
+  onSubmitGroup(): void {
+    let { groupName } = this.groupForm.value;
     if (groupName && !this.timerGroups.includes(groupName)) {
       this.timerGroups.push(groupName);
     }
-    const group = selectedGroup || groupName || 'Default';
+  }
+
+  onSubmitTimer(): void {
+    let { selectedGroup, days, hours, minutes } = this.timerForm.value;
+    const group = selectedGroup || 'Default';
     minutes = minutes || 0;
     days = days || 0;
     hours = hours || 0;
@@ -53,9 +59,9 @@ export class TimerComponent implements OnInit, OnDestroy {
     targetDate.setDate(targetDate.getDate() + parseInt(days, 10));
     targetDate.setHours(targetDate.getHours() + parseInt(hours, 10));
     targetDate.setMinutes(targetDate.getMinutes() + parseInt(minutes, 10));
-
+  
     this.countdowns.push({ group, targetDate, timeLeft: this.calculateTimeLeft(targetDate) });
-
+  
     if (!this.timerSubscription || this.timerSubscription.closed) {
       this.timerSubscription = interval(1000).subscribe(() => {
         this.countdowns.forEach(countdown => {

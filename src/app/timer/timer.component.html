@@ -1,38 +1,62 @@
 <div class="flex flex-col items-center p-4">
-  <form [formGroup]="countdownForm" (ngSubmit)="onSubmit()" class="mb-4">
-    <div class="flex flex-col lg:flex-row space-y-2 lg:space-y-0 lg:space-x-2 mb-2">
-      <div class="flex flex-col space-y-1">
-        <input type="text" formControlName="groupName" placeholder="Account Name" class="border p-2 rounded h-10">
-        <span class="text-xs text-gray-500">Account Name</span>
-      </div>
-      <div class="flex flex-col space-y-1">
-        <select formControlName="selectedGroup" class="border p-2 rounded h-10">
-          <option *ngFor="let group of timerGroups" [value]="group">{{group}}</option>
-        </select>
-      </div>
-      <div class="flex flex-col space-y-1">
-        <input type="number" formControlName="days" placeholder="Days" class="border p-2 rounded h-10">
-        <span class="text-xs text-gray-500">Days</span>
-      </div>
-      <div class="flex flex-col space-y-1">
-        <input type="number" formControlName="hours" placeholder="Hours" class="border p-2 rounded h-10">
-        <span class="text-xs text-gray-500">Hours</span>
-      </div>
-      <div class="flex flex-col space-y-1">
-        <input type="number" formControlName="minutes" placeholder="Minutes" class="border p-2 rounded h-10">
-        <span class="text-xs text-gray-500">Minutes</span>
-      </div>
+  <!-- Flex container for responsive layout -->
+  <div class="flex flex-col lg:flex-row w-full lg:space-x-4">
+    <!-- Account Group Creation Box -->
+    <div class="flex-1 mb-4 shadow-lg rounded-lg">
+      <form [formGroup]="groupForm" (ngSubmit)="onSubmitGroup()" class="flex flex-col space-y-4 border p-4 rounded-lg">
+        <h2 class="text-lg font-bold mb-2">Manage Accounts</h2>
+        <div class="flex flex-col space-y-1 mb-3">
+          <span class="text-xs text-gray-500 block mb-1">Account Name</span>
+          <input type="text" formControlName="groupName" placeholder="Account Name" class="border p-2 rounded h-10 w-full">
+        </div>
+        <button [disabled]="!groupForm.valid"
+                [class.opacity-50]="!groupForm.valid"
+                [class.cursor-not-allowed]="!groupForm.valid"
+                class="bg-fuchsia-600 text-white p-2 rounded h-10 mt-2"
+                type="submit">Create Account</button>
+      </form>
     </div>
-    <button type="submit"
-      [disabled]="!countdownForm.valid"
-      [class.opacity-50]="!countdownForm.valid"
-      [class.cursor-not-allowed]="!countdownForm.valid"
-      class="bg-fuchsia-600 text-white p-2 rounded h-10">Start Countdown</button>
-  </form>
-  <div class="space-y-2">
-    <div *ngFor="let countdown of countdowns" class="p-2 border rounded">
-      <p>Group: {{countdown.group}}</p>
-      <p>Countdown: {{countdown.timeLeft}}</p>
+
+    <!-- Set Timer Form Box -->
+    <div class="flex-1 mb-4 shadow-lg rounded-lg">
+      <form [formGroup]="timerForm" (ngSubmit)="onSubmitTimer()" class="flex flex-col space-y-4 border p-4 rounded-lg">
+        <h2 class="text-lg font-bold mb-2">Create Timer</h2>
+        <div class="flex flex-col space-y-1 mb-3">
+          <span class="text-xs text-gray-500 block mb-1">Choose Account</span>
+          <select formControlName="selectedGroup" class="border p-2 rounded h-10 w-full">
+            <option *ngFor="let group of timerGroups" [value]="group">{{group}}</option>
+          </select>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div class="flex flex-col space-y-1">
+            <span class="text-xs text-gray-500 block mb-1">Days</span>
+            <input type="number" formControlName="days" placeholder="Days" class="border p-2 rounded h-10 w-full">
+            
+          </div>
+          <div class="flex flex-col space-y-1">
+            <span class="text-xs text-gray-500 block mb-1">Hours</span>
+            <input type="number" formControlName="hours" placeholder="Hours" class="border p-2 rounded h-10 w-full">
+            
+          </div>
+          <div class="flex flex-col space-y-1">
+            <span class="text-xs text-gray-500 block mb-1">Minutes</span>
+            <input type="number" formControlName="minutes" placeholder="Minutes" class="border p-2 rounded h-10 w-full">
+            
+          </div>
+        </div>
+        <button type="submit"
+                [disabled]="!timerForm.valid"
+                [class.opacity-50]="!timerForm.valid"
+                [class.cursor-not-allowed]="!timerForm.valid"
+                class="bg-fuchsia-600 text-white p-2 rounded h-10 mt-2"
+                >Start Upgrade Timer</button>
+      </form>
     </div>
   </div>
-</div>
+
+  <!-- Countdown List Group -->
+  <div class="w-full space-y-2 mt-4">
+    <div *ngFor="let countdown of countdowns" class="p-2 border rounded shadow-lg">
+      <p>Account Name: {{countdown.group}}</p>
+      <p>Countdown: {{countdown.timeLeft}}</p>
+    </div>
