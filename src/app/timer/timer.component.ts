@@ -28,6 +28,7 @@ export class TimerComponent implements OnInit, OnDestroy {
   countdowns: Array<{ group: string, targetDate: Date, timeLeft: string }> = [];
   timerGroups: string[] = [];
   private timerSubscription!: Subscription;
+  
 
 
   constructor(private formBuilder: FormBuilder, private metaTagService: Meta, private titleService: Title) {
@@ -75,8 +76,10 @@ export class TimerComponent implements OnInit, OnDestroy {
     targetDate.setDate(targetDate.getDate() + parseInt(days, 10));
     targetDate.setHours(targetDate.getHours() + parseInt(hours, 10));
     targetDate.setMinutes(targetDate.getMinutes() + parseInt(minutes, 10));
+
+    let timeLeft = this.calculateTimeLeft(targetDate);
   
-    this.countdowns.push({ group, targetDate, timeLeft: this.calculateTimeLeft(targetDate) });
+    this.countdowns.push({ group, targetDate, timeLeft: timeLeft });
   
     if (!this.timerSubscription || this.timerSubscription.closed) {
       this.timerSubscription = interval(1000).subscribe(() => {
@@ -102,6 +105,12 @@ export class TimerComponent implements OnInit, OnDestroy {
     const index = this.timerGroups.indexOf(group);
     if (index > -1) {
       this.timerGroups.splice(index, 1);
+    }
+    if (this.timerForm) {
+      const selectedGroupControl = this.timerForm.get('selectedGroup');
+      if (selectedGroupControl && selectedGroupControl.value === group) {
+        selectedGroupControl.setValue(''); // or '' if it should be an empty string
+      }
     }
 
     this.countdowns = this.countdowns.filter(countdown => countdown.group !== group);
