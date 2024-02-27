@@ -103,6 +103,11 @@ export class TimerComponent implements OnInit, OnDestroy {
 
     this.saveToLocalStorage();
 
+    //reset hours, minutes and days
+    this.timerForm.get('days')?.setValue('');
+    this.timerForm.get('hours')?.setValue('');
+    this.timerForm.get('minutes')?.setValue('');
+
     if (!this.timerSubscription || this.timerSubscription.closed) {
       this.timerSubscription = interval(1000).subscribe(() => {
         this.countdowns.forEach(countdown => {
