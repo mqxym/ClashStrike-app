@@ -3,7 +3,7 @@
   <div class="flex flex-col lg:flex-row w-full lg:space-x-4">
     <!-- Account Group Creation Box -->
     <div class="flex-1 mb-4 shadow-lg rounded-lg">
-      <form [formGroup]="groupForm" (ngSubmit)="onSubmitGroup()" class="flex flex-col space-y-4 border p-4 rounded-lg">
+      <form [formGroup]="groupForm" (ngSubmit)="onSubmitGroup()" class="flex flex-col space-y-4 p-4">
         <h2 class="text-lg font-bold mb-2">🔨 Manage Accounts</h2>
         <div class="flex flex-col space-y-1 mb-3">
           <span class="text-xs text-gray-500 block mb-1">Account Name</span>
@@ -13,10 +13,8 @@
                 [class.opacity-50]="!groupForm.valid"
                 [class.cursor-not-allowed]="!groupForm.valid"
                 class="bg-fuchsia-600 text-white p-2 rounded h-10 mt-2"
-                type="submit">Create Account</button>
-        <ul >
-          <li *ngIf="timerGroups.length === 0">Add an account to start 😁</li>
-        </ul>
+                type="submit">Create Account
+        </button>
         <p  *ngIf="showAccountCreated" [@fade] class="text-fuchsia-500">Account created</p>
         <p  *ngIf="showAccountDeleted" [@fade] class="text-fuchsia-500">Account deleted</p>
       </form>
@@ -24,7 +22,7 @@
     </div>
 
     <!-- Set Timer Form Box -->
-    <div class="flex-1 mb-4 shadow-lg rounded-lg">
+    <div *ngIf="timerGroups.length !== 0" class="flex-1 mb-4 shadow-lg rounded-lg">
       <form [formGroup]="timerForm" (ngSubmit)="onSubmitTimer()" class="flex flex-col space-y-4 p-4">
         <h2 class="text-lg font-bold mb-2">⏰ Create Timers</h2>
         <div class="flex flex-col space-y-1 mb-3">
@@ -62,14 +60,17 @@
 
   <!-- Countdown List Group -->
   <h2 class="text-lg font-bold mb-2">Account List</h2>
-  <div class="w-full space-y-2 mt-4 shadow-lg rounded-lg" *ngFor="let group of timerGroups">
+  <p *ngIf="timerGroups.length === 0">Add an account to start 😁</p>
+  <div class="w-full space-y-2 mt-1 shadow-lg rounded-lg" *ngFor="let group of timerGroups">
     <div class="flex items-center m-2 divide-x">
       <h3 class="font-bold"><u>Account: {{ group }}</u></h3>
-      <button class="bg-red-500 text-white p-1 rounded h-8 mt-2 ml-auto" (click)="confirmDelete(group)">Remove</button>
+      <button class="bg-gradient-radial from-orange-500 to-purple-500 text-white p-1 rounded h-8 mt-2 ml-auto d-flex align-items-center justify-content-center" (click)="confirmDelete(group)">
+        <mat-icon class="d-flex align-self-center" style="color: white;">delete</mat-icon>
+      </button>
     </div>
     <div class="m-2" *ngFor="let timer of countdowns">
       <p *ngIf="timer.group === group">
-        Time left: {{ timer.timeLeft }}
+        Upgrade <b>#{{ timer.id }}</b>: {{ timer.timeLeft }}
       </p>
     </div>
   </div>
