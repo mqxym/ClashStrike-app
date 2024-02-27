@@ -52,6 +52,13 @@ export class TimerComponent implements OnInit, OnDestroy {
       {name: 'description', content: 'ClashMultiTimer is a tool for Clash of Clans to help them organizing their upgrades.'},
       {name: 'keywords', content: 'Clash of Clans, ClashMultiTimer, Game, Tool, Upgrades'},
     ]);
+    this.readFromLocalStorage();
+
+    this.timerSubscription = interval(1000).subscribe(() => {
+      this.countdowns.forEach(countdown => {
+        countdown.timeLeft = this.calculateTimeLeft(countdown.targetDate);
+      });
+    });
   }
 
   onSubmitGroup(): void {
@@ -69,6 +76,8 @@ export class TimerComponent implements OnInit, OnDestroy {
 
     //Select the new group
     this.timerForm.get('selectedGroup')?.setValue(groupName);
+
+    this.saveToLocalStorage();
     
   }
 
@@ -91,6 +100,8 @@ export class TimerComponent implements OnInit, OnDestroy {
     
     // Sort array by targetDate
     this.countdowns.sort((a, b) => a.targetDate.getTime() - b.targetDate.getTime());
+
+    this.saveToLocalStorage();
 
     if (!this.timerSubscription || this.timerSubscription.closed) {
       this.timerSubscription = interval(1000).subscribe(() => {
@@ -125,6 +136,7 @@ export class TimerComponent implements OnInit, OnDestroy {
     }
 
     this.countdowns = this.countdowns.filter(countdown => countdown.group !== group);
+    this.saveToLocalStorage();
   }
 
   ngOnDestroy(): void {
@@ -167,5 +179,32 @@ export class TimerComponent implements OnInit, OnDestroy {
 
   getGroupIndex(group: string, timer: any): number { // Change the parameter type of timer to any
     return this.countdowns.filter(t => t.group === group).indexOf(timer) + 1;
+  }
+
+  // Method to save timerGroups and countdowns to LocalStorage
+  saveToLocalStorage() {
+    localStorage.setItem('timerGroups', JSON.stringify(this.timerGroups));
+    localStorage.setItem('countdowns', JSON.stringify(this.countdowns));
+  }
+
+  // Method to read timerGroups and countdowns from LocalStorage
+  readFromLocalStorage() {
+    const storedTimerGroups = localStorage.getItem('timerGroups');
+    const storedCountdowns = localStorage.getItem('countdowns');
+
+    if (storedTimerGroups) {
+      this.timerGroups = JSON.parse(storedTimerGroups);
+    }
+
+    if (storedCountdowns) {
+      this.countdowns = JSON.parse(storedCountdowns);
+      this.countdowns.forEach(countdown => {
+        countdown.targetDate = new Date(countdown.targetDate);
+      });
+      // Set countdown.timeLeft for each countdown
+      this.countdowns.forEach(countdown => {
+        countdown.timeLeft = this.calculateTimeLeft(countdown.targetDate);
+      });
+    }
   }
 }
