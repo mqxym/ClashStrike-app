@@ -88,7 +88,10 @@ export class TimerComponent implements OnInit, OnDestroy {
     let timeLeft = this.calculateTimeLeft(targetDate);
   
     this.countdowns.push({ group, targetDate, timeLeft: timeLeft , id: id});
-  
+    
+    // Sort array by targetDate
+    this.countdowns.sort((a, b) => a.targetDate.getTime() - b.targetDate.getTime());
+
     if (!this.timerSubscription || this.timerSubscription.closed) {
       this.timerSubscription = interval(1000).subscribe(() => {
         this.countdowns.forEach(countdown => {
