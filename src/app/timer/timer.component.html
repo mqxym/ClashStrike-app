@@ -4,9 +4,9 @@
     <!-- Account Group Creation Box -->
     <div class="flex-1 mb-4 shadow-lg rounded-lg">
       <form [formGroup]="groupForm" (ngSubmit)="onSubmitGroup()" class="flex flex-col space-y-4 p-4">
-        <h2 class="text-lg font-bold mb-2">🔨 Manage Accounts</h2>
+        <h2 class="text-lg font-bold mb-2">🔨 Add Accounts</h2>
         <div class="flex flex-col space-y-1 mb-3">
-          <span class="text-xs text-gray-500 block mb-1">Account Name</span>
+          <span class="text-xs text-gray-500 block mb-1">Account Name (max 15 characters)</span>
           <input type="text" formControlName="groupName" placeholder="Account Name" class="border p-2 rounded h-10 w-full">
         </div>
         <button [disabled]="!groupForm.valid"
@@ -42,12 +42,19 @@
             <input type="number" formControlName="hours" placeholder="Hours" class="border p-2 rounded h-10 w-full">
             
           </div>
-          <div class="flex flex-col space-y-1">
+          <!-- <div class="flex flex-col space-y-1"> -->
+          <div class="flex flex-col space-y-1"  *ngIf="timerForm.get('minutesNotVisible')?.value == false || timerForm.get('minutesNotVisible')?.value == null">
             <span class="text-xs text-gray-500 block mb-1">Minutes</span>
             <input type="number" formControlName="minutes" placeholder="Minutes" class="border p-2 rounded h-10 w-full">
-            
           </div>
         </div>
+
+        <div class="flex items-center space-x-2">
+          <p class="text-gray-500 mb-1 ">Minutes not visible</p>
+          <input type="checkbox" formControlName="minutesNotVisible" class="border p-2 rounded h-10 ml-2">
+        </div>
+  
+        
         <button type="submit"
                 [disabled]="!timerForm.valid"
                 [class.opacity-50]="!timerForm.valid"
@@ -62,17 +69,57 @@
   <h2 class="text-lg font-bold mb-2">Account List</h2>
   <p *ngIf="timerGroups.length === 0">Add an account to start 😁</p>
   <div class="w-full space-y-2 mt-1 shadow-lg rounded-lg" *ngFor="let group of timerGroups">
-    <div class="flex items-center m-2 divide-x">
+    <div class="flex items-center m-2 divide-x justify-between">
       <h3 class="font-bold"><u>Account: {{ group }}</u></h3>
-      <button class="bg-gradient-radial from-orange-500 to-purple-500 text-white p-1 rounded h-8 mt-2 ml-auto d-flex align-items-center justify-content-center" (click)="confirmDelete(group)">
-        <mat-icon class="d-flex align-self-center" style="color: white;">delete</mat-icon>
-      </button>
+      <div class="flex">
+        <button class="bg-gradient-radial from-blue-500 to-purple-500 text-white p-1 rounded h-8 mt-2 ml-2 d-flex align-items-center justify-content-center" (click)="fastForward(group)">
+          <mat-icon class="d-flex align-self-center" style="color: white;">hourglass_bottom</mat-icon>
+        </button>
+        <button class="bg-gradient-radial from-green-500 to-blue-500 text-white p-1 rounded h-8 mt-2 ml-2 d-flex align-items-center justify-content-center" (click)="showEditGroupForm(group)">
+          <mat-icon class="d-flex align-self-center" style="color: white;">edit</mat-icon>
+        </button>
+        <button class="bg-gradient-radial from-orange-500 to-purple-500 text-white p-1 rounded h-8 mt-2 ml-2 d-flex align-items-center justify-content-center" (click)="confirmDelete(group)">
+          <mat-icon class="d-flex align-self-center" style="color: white;">delete</mat-icon>
+        </button>
+      </div>
     </div>
     <div class="m-2" *ngFor="let timer of countdowns">
       <p *ngIf="timer.group === group">
+        <mat-icon (click)="deleteCountdown(timer.id, timer.group)">diamond</mat-icon>
         Upgrade <b>#{{ timer.id }}</b>: {{ timer.timeLeft }}
       </p>
     </div>
   </div>
-  <div >
+  <div>
 
+<!-- Edit Account Modal -->
+<div *ngIf="showEditModal" class="fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+  <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+    <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
+    <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+    <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+      <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+        <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">Edit Account</h3>
+        <form [formGroup]="editGroupForm" (ngSubmit)="onSubmitEditGroup()" class="flex flex-col space-y-4 p-4">
+          <div class="flex flex-col space-y-1 mb-3">
+            <span class="text-xs text-gray-500 block mb-1">Account Name</span>
+            <input type="text" formControlName="newGroupName" placeholder="Account Name" class="border p-2 rounded h-10 w-full">
+          </div>
+          <input type="text" formControlName="selectedGroup" hidden>
+          <div class="flex space-x-4">
+            <button type="submit"
+                    [disabled]="!editGroupForm.valid"
+                    [class.opacity-50]="!editGroupForm.valid"
+                    [class.cursor-not-allowed]="!editGroupForm.valid"
+                    class="bg-fuchsia-600 text-white p-2 rounded h-10"
+                    >Save Changes</button>
+            <button type="button"
+                    (click)="showEditModal = false"
+                    class="bg-gray-500 text-white p-2 rounded h-10"
+                    >Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
