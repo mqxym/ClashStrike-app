@@ -29,14 +29,15 @@ export class TimerComponent implements OnInit, OnDestroy {
   public showAccountDeleted: boolean = false;
   public showEditModal: boolean = false;
   countdowns: Array<{ group: string, targetDate: Date, timeLeft: string , id: number }> = [];
-  timerGroups: string[] = [];
+  timerGroups: Array <{ name: string, builderCount: number }> = [];
   private timerSubscription!: Subscription;
   
 
 
   constructor(private formBuilder: FormBuilder, private metaTagService: Meta, private titleService: Title) {
     this.groupForm = this.formBuilder.group({
-      groupName: ['', [Validators.required, Validators.maxLength(15)]]
+      groupName: ['', [Validators.required, Validators.maxLength(15)]],
+      builderCount: ['', [Validators.required, Validators.min(2), Validators.max(7)]]
     });
 
     this.timerForm  = this.formBuilder.group({
@@ -49,7 +50,8 @@ export class TimerComponent implements OnInit, OnDestroy {
 
     this.editGroupForm = this.formBuilder.group({
       selectedGroup: ['', Validators.required],
-      newGroupName: ['', Validators.required]
+      newGroupName: ['', Validators.required],
+      newBuilderCount: ['', [Validators.required, Validators.min(2), Validators.max(7)]]
     });
   }
 
@@ -68,11 +70,11 @@ export class TimerComponent implements OnInit, OnDestroy {
   }
 
   onSubmitGroup(): void {
-    let { groupName } = this.groupForm.value;
+    let { groupName, builderCount } = this.groupForm.value;
     
     if (groupName && !this.timerGroups.includes(groupName)) {
       this.showAccountCreated = true;
-      this.timerGroups.push(groupName);
+      this.timerGroups.push({ name: groupName, builderCount: builderCount});
       setTimeout(() => {
         this.showAccountCreated = false;
       }, 2000);
@@ -122,7 +124,14 @@ export class TimerComponent implements OnInit, OnDestroy {
     targetDate.setHours(targetDate.getHours() + parseInt(hours, 10));
     targetDate.setMinutes(targetDate.getMinutes() + parseInt(minutes, 10));
 
-    let id = this.countdowns.filter(countdown => countdown.group === group).length + 1;
+    //Get id by iterating through possible ids and assigning a free id
+    let id = 1;
+    while (this.countdowns.some(countdown => countdown.id === id && countdown.group === group)) {
+      id++;
+    }
+
+
+    //let id = this.countdowns.filter(countdown => countdown.group === group).length + 1;
 
     let timeLeft = this.calculateTimeLeft(targetDate);
   
@@ -163,7 +172,8 @@ export class TimerComponent implements OnInit, OnDestroy {
   }
 
   deleteGroup(group: string): void {
-    const index = this.timerGroups.indexOf(group);
+
+    const index = this.timerGroups.findIndex(timerGroup => timerGroup.name === group);
     if (index > -1) {
       this.timerGroups.splice(index, 1);
     }
@@ -192,17 +202,20 @@ export class TimerComponent implements OnInit, OnDestroy {
     this.saveToLocalStorage();
   }
 
-  showEditGroupForm(group: string): void {
+  showEditGroupForm(group: string, builderCount: number): void {
     this.editGroupForm.get('selectedGroup')?.setValue(group);
     this.editGroupForm.get('newGroupName')?.setValue(group);
+    this.editGroupForm.get('newBuilderCount')?.setValue(builderCount);
     this.showEditModal = true;
   }
 
   onSubmitEditGroup(): void {
-    let { selectedGroup, newGroupName } = this.editGroupForm.value;
-    const index = this.timerGroups.indexOf(selectedGroup);
+    let { selectedGroup , newBuilderCount, newGroupName } = this.editGroupForm.value;
+    newBuilderCount = parseInt(newBuilderCount, 10);
+    const index = this.timerGroups.findIndex(timerGroup => timerGroup.name === selectedGroup);
     if (index > -1) {
-      this.timerGroups[index] = newGroupName;
+      this.timerGroups[index].name = newGroupName;
+      this.timerGroups[index].builderCount = newBuilderCount;
     }
 
     this.countdowns.forEach(countdown => {
@@ -262,6 +275,21 @@ export class TimerComponent implements OnInit, OnDestroy {
     return timeLeft.trim();
   }
 
+  getCountdownsLength(group: string) : number {
+    return this.countdowns.filter(countdown => countdown.group === group).length;
+  }
+
+  // Method to check if a any countdown groups length is the same as the builderCount for all groups
+
+  isBuilderCountReached() : boolean {
+    for (const timerGroup of this.timerGroups) {
+      if (this.getCountdownsLength(timerGroup.name) !== timerGroup.builderCount) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   // Method to save timerGroups and countdowns to LocalStorage
   saveToLocalStorage() {
     localStorage.setItem('timerGroups', JSON.stringify(this.timerGroups));
@@ -290,7 +318,11 @@ export class TimerComponent implements OnInit, OnDestroy {
         });
       }
     }
-    
-    
+  }
+
+  clearLocalStorage() {
+    localStorage.clear();
+    this.timerGroups = [];
+    this.countdowns = [];
   }
 }
