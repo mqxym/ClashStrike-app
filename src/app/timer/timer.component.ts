@@ -320,9 +320,21 @@ export class TimerComponent implements OnInit, OnDestroy {
     }
   }
 
-  clearLocalStorage() {
-    localStorage.clear();
-    this.timerGroups = [];
-    this.countdowns = [];
+  // Method to go through all countdowns and check if any of them are finished
+  checkFinishedCountdowns() {
+    let isFinished = false;
+    this.countdowns.forEach(countdown => {
+      if (countdown.timeLeft === 'Upgrade finished!') {
+        isFinished = true;
+      }
+    });
+    return isFinished;
   }
+
+  // Method to go through all countdowns and delete the finished ones
+  deleteFinishedCountdowns() {
+    this.countdowns = this.countdowns.filter(countdown => countdown.timeLeft !== 'Upgrade finished!');
+    this.saveToLocalStorage();
+  }
+  
 }
