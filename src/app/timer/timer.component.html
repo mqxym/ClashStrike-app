@@ -11,7 +11,7 @@
           </div>
           <div class="flex flex-col space-y-1  w-1/4">
             <span class="text-xs text-gray-500 block mb-1">Builders</span>
-            <input type="number" formControlName="builderCount" placeholder="2-7" class="border p-2 rounded h-10">
+            <input type="number" pattern="[0-9]*" formControlName="builderCount" placeholder="2-7" class="border p-2 rounded h-10">
           </div>
         </div>
         <button [disabled]="!groupForm.valid"
@@ -41,18 +41,18 @@
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div class="flex flex-col space-y-1">
             <span class="text-xs text-gray-500 block mb-1">Days</span>
-            <input type="number" formControlName="days" placeholder="Days" class="border p-2 rounded h-10 w-full">
+            <input type="number" pattern="[0-9]*" formControlName="days" placeholder="Days" class="border p-2 rounded h-10 w-full">
             
           </div>
           <div class="flex flex-col space-y-1">
             <span class="text-xs text-gray-500 block mb-1">Hours</span>
-            <input type="number" formControlName="hours" placeholder="Hours" class="border p-2 rounded h-10 w-full">
+            <input type="number" pattern="[0-9]*" formControlName="hours" placeholder="Hours" class="border p-2 rounded h-10 w-full">
             
           </div>
           <!-- <div class="flex flex-col space-y-1"> -->
           <div class="flex flex-col space-y-1"  *ngIf="timerForm.get('minutesNotVisible')?.value == false || timerForm.get('minutesNotVisible')?.value == null">
             <span class="text-xs text-gray-500 block mb-1">Minutes</span>
-            <input type="number" formControlName="minutes" placeholder="Minutes" class="border p-2 rounded h-10 w-full">
+            <input type="number" pattern="[0-9]*" formControlName="minutes" placeholder="Minutes" class="border p-2 rounded h-10 w-full">
           </div>
         </div>
 
@@ -97,7 +97,6 @@
       </p>
     </div>
   </div>
-  <button class="bg-fuchsia-600 text-white p-2 rounded h-10 mt-2" (click)="clearLocalStorage()">Clear All Timers</button>
 <div>
 
 <!-- Edit Account Modal -->
@@ -115,7 +114,7 @@
           </div>
           <div class="flex flex-col space-y-1 mb-3">
             <span class="text-xs text-gray-500 block mb-1">Builder Count</span>
-            <input type="number" formControlName="newBuilderCount" placeholder="2-7" class="border p-2 rounded h-10 w-full">
+            <input type="number" pattern="[0-9]*" formControlName="newBuilderCount" placeholder="2-7" class="border p-2 rounded h-10 w-full">
           </div>
           <input type="text" formControlName="selectedGroup" hidden>
           <div class="flex space-x-4">
