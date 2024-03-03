@@ -68,6 +68,8 @@
                 [class.cursor-not-allowed]="!timerForm.valid"
                 class="bg-fuchsia-600 text-white p-2 rounded h-10 mt-2"
                 >Start Upgrade Timer</button>
+
+        <p  *ngIf="showTimerCreated" [@fade] class="text-fuchsia-500">Timer created 💪</p>
       </form>
     </div>
   </div>

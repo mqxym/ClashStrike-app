@@ -27,6 +27,7 @@ export class TimerComponent implements OnInit, OnDestroy {
   
   public showAccountCreated: boolean = false;
   public showAccountDeleted: boolean = false;
+  public showTimerCreated: boolean = false;
   public showEditModal: boolean = false;
   countdowns: Array<{ group: string, targetDate: Date, timeLeft: string , id: number }> = [];
   timerGroups: Array <{ name: string, builderCount: number }> = [];
@@ -149,6 +150,8 @@ export class TimerComponent implements OnInit, OnDestroy {
     // Sort array by targetDate
     this.countdowns.sort((a, b) => a.targetDate.getTime() - b.targetDate.getTime());
 
+    this.showTimerCreated = true;
+
     this.saveToLocalStorage();
 
     //reset hours, minutes and days
@@ -157,6 +160,10 @@ export class TimerComponent implements OnInit, OnDestroy {
     this.timerForm.get('minutes')?.setValue('');
 
     this.startTimers();
+
+    setTimeout(() => { 
+      this.showTimerCreated = false;
+    } , 2000);
   }
 
   startTimers(): void {
