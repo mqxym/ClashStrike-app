@@ -342,6 +342,11 @@ export class TimerComponent implements OnInit, OnDestroy {
 
   // Method to go through all countdowns and delete the finished ones
   deleteFinishedCountdowns() {
+    this.countdowns.forEach(countdown => {
+      if (countdown.timeLeft === 'Upgrade finished!') {
+        this.timerForm.get('selectedGroup')?.setValue(countdown.group);
+      }
+    });
     this.countdowns = this.countdowns.filter(countdown => countdown.timeLeft !== 'Upgrade finished!');
     this.saveToLocalStorage();
   }
