@@ -72,6 +72,13 @@ export class TimerComponent implements OnInit, OnDestroy {
 
   onSubmitGroup(): void {
     let { groupName, builderCount } = this.groupForm.value;
+
+    if (!builderCount || builderCount < 2 || builderCount > 7) {
+      return;
+    }
+    if (!groupName) {
+      return;
+    }
     
 
     //variable to check if groupname exists
@@ -101,7 +108,11 @@ export class TimerComponent implements OnInit, OnDestroy {
 
   onSubmitTimer(): void {
     let { selectedGroup, days, hours, minutes, minutesNotVisible } = this.timerForm.value;
-    const group = selectedGroup || 'Default';
+    if (!selectedGroup) {
+      return;
+    }
+    
+    const group = selectedGroup as string;
     minutes = minutes || 0;
     days = days || 0;
     hours = hours || 0;
