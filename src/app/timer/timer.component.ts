@@ -72,7 +72,16 @@ export class TimerComponent implements OnInit, OnDestroy {
   onSubmitGroup(): void {
     let { groupName, builderCount } = this.groupForm.value;
     
-    if (groupName && !this.timerGroups.includes(groupName)) {
+
+    //variable to check if groupname exists
+    let groupExists = false;
+    this.timerGroups.forEach(timerGroup => {
+      if (timerGroup.name === groupName) {
+        groupExists = true;
+      }
+    });
+
+    if (groupName && !groupExists) {
       this.showAccountCreated = true;
       this.timerGroups.push({ name: groupName, builderCount: builderCount});
       setTimeout(() => {

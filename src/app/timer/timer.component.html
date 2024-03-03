@@ -136,7 +136,7 @@
 </div>
 
 <div *ngIf="checkFinishedCountdowns()" class="fixed top-0 left-0 w-full h-full flex items-center justify-center z-50 bg-gray-500 bg-opacity-75 transition-opacity" role="dialog" aria-labelledby="finishedUpgradesTitle" aria-modal="true">
-  <div class="bg-white w-3/4 h-3/4 p-5 rounded shadow-lg items-center justify-center">
+  <div class="bg-white w-auto h-auto p-5 rounded shadow-lg items-center justify-center">
     <h2 class="text-2xl mb-4 text-center"><u>Finished Upgrades</u></h2>
     <ng-container *ngFor="let countdown of countdowns">
       <p class="text-center" *ngIf="countdown.timeLeft === 'Upgrade finished!'"><b>Account: {{countdown.group}}</b></p>
