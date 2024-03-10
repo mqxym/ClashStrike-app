@@ -318,13 +318,13 @@ export class TimerComponent implements OnInit, OnDestroy {
   }
 
   // Method to save timerGroups and countdowns to LocalStorage
-  saveToLocalStorage() {
+  saveToLocalStorage() : void{
     localStorage.setItem('timerGroups', JSON.stringify(this.timerGroups));
     localStorage.setItem('countdowns', JSON.stringify(this.countdowns));
   }
 
   // Method to read timerGroups and countdowns from LocalStorage
-  readFromLocalStorage() {
+  readFromLocalStorage() : void {
 
     if (typeof localStorage !== 'undefined'){
       const storedTimerGroups = localStorage.getItem('timerGroups');
@@ -348,7 +348,7 @@ export class TimerComponent implements OnInit, OnDestroy {
   }
 
   // Method to go through all countdowns and check if any of them are finished
-  checkFinishedCountdowns() {
+  checkFinishedCountdowns() : boolean{
     let isFinished = false;
     this.countdowns.forEach(countdown => {
       if (countdown.timeLeft === 'Upgrade finished!') {
@@ -359,7 +359,7 @@ export class TimerComponent implements OnInit, OnDestroy {
   }
 
   // Method to go through all countdowns and delete the finished ones
-  deleteFinishedCountdowns() {
+  deleteFinishedCountdowns() : void {
     this.countdowns.forEach(countdown => {
       if (countdown.timeLeft === 'Upgrade finished!') {
         this.timerForm.get('selectedGroup')?.setValue(countdown.group);
