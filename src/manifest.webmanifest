@@ -1,7 +1,7 @@
 {
   "name": "ClashStrike",
   "short_name": "Strike",
-  "theme_color": "#9f02fa",
+  "theme_color": "#fafafa",
   "background_color": "#fafafa",
   "display": "standalone",
   "scope": "./",
