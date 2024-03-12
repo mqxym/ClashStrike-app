@@ -12,4 +12,5 @@ export const routes: Route[] = [
   { path: 'timer', component: TimerComponent},
   { path: 'about', component: AboutComponent },
   { path: 'contact', component: ContactComponent },
+  { path: '**', redirectTo: '/home' }, // Wildcard route to redirect any unmatched paths to /home
 ];

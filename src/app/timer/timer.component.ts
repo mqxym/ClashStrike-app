@@ -57,11 +57,11 @@ export class TimerComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.titleService.setTitle('Upgrade Helper - ClashMultiTimer');
+    this.titleService.setTitle('Upgrade Helper - ClashStrike');
 
     this.metaTagService.addTags([
-      {name: 'description', content: 'ClashMultiTimer is a tool for Clash of Clans to help them organizing their upgrades.'},
-      {name: 'keywords', content: 'Clash of Clans, ClashMultiTimer, Game, Tool, Upgrades'},
+      {name: 'description', content: 'Strike is a tool for Clash of Clans to help them organizing their upgrades.'},
+      {name: 'keywords', content: 'Clash of Clans, Strike, ClashStrike, Game, Tool, Upgrades'},
     ]);
     this.readFromLocalStorage();
 
