@@ -14,7 +14,7 @@ export class AboutComponent implements OnInit {
 
   ngOnInit() {
     this.metaTagService.addTags([
-      {name: 'description', content: 'This is the about page for ClashMultiTimer'},
+      {name: 'description', content: 'This is the about page for ClashStrike.'},
     ]);
   }
 
