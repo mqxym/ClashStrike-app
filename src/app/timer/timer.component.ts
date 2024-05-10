@@ -43,7 +43,7 @@ export class TimerComponent implements OnInit, OnDestroy {
 
     this.timerForm  = this.formBuilder.group({
       selectedGroup: ['', Validators.required],
-      days: ['', [Validators.min(0)]],
+      days: ['', [Validators.min(0), Validators.max(25)]],
       hours: ['', [Validators.min(0), Validators.max(23)]],
       minutes: ['', [Validators.min(0), Validators.max(59)]],
       minutesNotVisible: [false]
@@ -60,7 +60,7 @@ export class TimerComponent implements OnInit, OnDestroy {
     this.titleService.setTitle('Upgrade Helper - ClashStrike');
 
     this.metaTagService.addTags([
-      {name: 'description', content: 'Strike is a tool for Clash of Clans to help them organizing their upgrades.'},
+      {name: 'description', content: 'Strike is a tool for Clash of Clans to help players organizing their upgrades.'},
       {name: 'keywords', content: 'Clash of Clans, Strike, ClashStrike, Game, Tool, Upgrades'},
     ]);
     this.readFromLocalStorage();
