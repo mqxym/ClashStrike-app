@@ -1,0 +1,40 @@
+<div class="bg-white shadow-lg rounded-lg p-6 max-w-lg border border-gray-300">
+    <div class="grid grid-cols-2 gap-4">
+        <div>
+            <label class="block text-sm font-medium text-gray-700">{{account.name}}</label>
+            <input type="text" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+            <div class="flex items-center mt-4">
+                <input type="checkbox" id="notifications" class="form-checkbox h-4 w-4 text-blue-500" [checked]="account.notificationsEnabled">
+                <label for="notifications" class="ml-2 block text-sm text-gray-900">
+                    Push Notifications
+                </label>
+            </div>
+        </div>
+        <div>
+            <label class="block text-sm font-medium text-gray-700">Resource Usage</label>
+            <div class="space-y-2 mt-1">
+                <div class="flex justify-between items-center border p-2 rounded">
+                    <span>Builders</span>
+                    <span class="flex items-center">
+                        <span class="font-semibold">{{account.buildersUsed}}/{{account.maxBuilders}}</span>
+                        <span class="material-icons ml-2 cursor-pointer">add_circle_outline</span>
+                    </span>
+                </div>
+                <div class="flex justify-between items-center border p-2 rounded">
+                    <span>Lab</span>
+                    <span class="flex items-center">
+                        <span class="font-semibold">{{account.labUsed}}/{{account.maxLab}}</span>
+                        <span *ngIf="!account.editLab">{{account.labUsed}}/<span (click)="toggleEditLab(i)" >{{account.maxLab}}</span></span>
+                        <input *ngIf="account.editLab" type="number" class="form-control">
+                        <!--<input *ngIf="account.editLab" [(ngModel)]="account.maxLab" type="number" class="form-control"> -->
+                        <span class="material-icons ml-2 cursor-pointer">add_circle_outline</span>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <button type="button" class="material-icons mt-6 text-blue-500 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded-full text-lg">
+        arrow_forward
+    </button>
+</div>
+

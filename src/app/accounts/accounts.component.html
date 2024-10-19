@@ -1,0 +1,6 @@
+<div class="grid gap-4">
+    <ng-container *ngFor="let accountData of accounts; let i = index">
+        <app-account-card [account]="accountData" (dataChange)="handleDataChange($event, i)"></app-account-card>
+      </ng-container>
+  </div>
+  
